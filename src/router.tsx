@@ -1,16 +1,16 @@
-import { createRootRoute, createRoute, createRouter, RouterProvider } from "@tanstack/react-router";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { createRouter } from "@tanstack/react-router";
+import { routeTree } from "./routeTree.gen";
 
-// Root layout
-const rootRoute = createRootRoute({
-  component: () => (
-    <div className="flex min-h-screen flex-col bg-background text-ink">
-      <SiteHeader />
-      <main className="flex-1">{/* Outlet handled by router */}</main>
-      <SiteFooter />
-    </div>
-  ),
-});
+export function getRouter() {
+  const router = createRouter({
+    routeTree,
+    scrollRestoration: true,
+  });
+  return router;
+}
 
-export const routeTree = rootRoute;
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: ReturnType<typeof getRouter>;
+  }
+}
