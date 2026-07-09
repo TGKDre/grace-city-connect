@@ -1,1 +1,5 @@
-error: unknown option '--path'
+{
+  "schemaVersion": 1,
+  "template": "tanstack_start_ts_current",
+  "revision": "tanstack_start_ts_current-ddd1d0e69701"
+}
