@@ -2,6 +2,8 @@
 
 @theme {
   --color-background: #0b0d12;
+  --color-surface: #0f1117;
+  --color-surface-2: #13151c;
   --color-ink: #f0eee6;
   --color-ink-muted: #9ca3af;
   --color-grace: #d4a843;
@@ -38,4 +40,11 @@ body {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
   max-width: 1200px;
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-grace);
 }
