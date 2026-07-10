@@ -2,37 +2,24 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { supabase } from '../lib/supabase'
 import { useState } from 'react'
 
-// Define the campus type based on the requirements
-interface Campus {
-  id: number
-  name: string
-  address: string
-  phone: string
-  email: string
-  instagram: string
-  service_times: {
-    sunday?: string
-    wednesday?: string
-    phone?: string
-    email?: string
-    ig?: string
-  }
-  // Add any other fields that might be in the database
-  [key: string]: any
+function parseST(st: unknown) {
+  if (typeof st === "string") try { return JSON.parse(st); } catch { return {}; }
+  if (st && typeof st === "object") return st;
+  return {};
 }
 
 export const Route = createFileRoute('/contact')({
   component: Contact,
   loader: async () => {
-    const { data: campuses } = await supabase
+    const { data } = await supabase
       .from('campuses')
       .select('*')
-    return { campuses }
+    return { campuses: data || [] }
   }
 })
 
 function Contact() {
-  const { campuses } = Route.useLoaderData<{ campuses: Campus[] | null }>()
+  const { campuses } = Route.useLoaderData()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -40,7 +27,7 @@ function Contact() {
     message: ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [formStatus, setFormStatus] = useState<null | 'success' | 'error'>(null)
+  const [formStatus, setFormStatus] = useState<'success' | 'error' | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -141,7 +128,7 @@ function Contact() {
                 value={formData.message}
                 onChange={handleChange}
                 className="w-full p-3 bg-background border border-white/5 rounded-lg text-ink"
-                rows="5"
+                rows={5}
                 required
               />
             </div>
@@ -159,19 +146,19 @@ function Contact() {
         <div>
           <h2 className="text-2xl font-display text-grace mb-8">Our Campuses</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {campuses?.map((campus: Campus) => {
-              const serviceTimes = campus.service_times || {}
+            {campuses.map((c: any) => {
+              const st = parseST(c.service_times)
               return (
-                <div key={campus.id} className="bg-background border border-white/5 rounded-lg p-6">
-                  <h3 className="text-xl font-display text-grace mb-4">{campus.name}</h3>
-                  <p className="mb-2"><strong>Address:</strong> {campus.address}</p>
-                  <p className="mb-2"><strong>Phone:</strong> <a href={`tel:${campus.phone}`} className="text-grace">{campus.phone}</a></p>
-                  <p className="mb-2"><strong>Email:</strong> <a href={`mailto:${campus.email}`} className="text-grace">{campus.email}</a></p>
-                  {campus.instagram && (
-                    <p className="mb-2"><strong>Instagram:</strong> <a href={`https://instagram.com/${campus.instagram}`} className="text-grace">@{campus.instagram}</a></p>
+                <div key={c.id} className="bg-background border border-white/5 rounded-lg p-6">
+                  <h3 className="text-xl font-display text-grace mb-4">{c.name}</h3>
+                  {c.address && <p className="mb-2"><strong>Address:</strong> {c.address}</p>}
+                  {c.phone && <p className="mb-2"><strong>Phone:</strong> <a href={`tel:${c.phone}`} className="text-grace">{c.phone}</a></p>}
+                  {c.email && <p className="mb-2"><strong>Email:</strong> <a href={`mailto:${c.email}`} className="text-grace">{c.email}</a></p>}
+                  {c.instagram && (
+                    <p className="mb-2"><strong>Instagram:</strong> <a href={`https://instagram.com/${c.instagram}`} className="text-grace">@{c.instagram}</a></p>
                   )}
-                  {serviceTimes.sunday && <p className="mb-2"><strong>Sunday Service:</strong> {serviceTimes.sunday}</p>}
-                  {serviceTimes.wednesday && <p className="mb-2"><strong>Wednesday Service:</strong> {serviceTimes.wednesday}</p>}
+                  {st.sunday && <p className="mb-2"><strong>Sunday Service:</strong> {st.sunday}</p>}
+                  {st.wednesday && <p className="mb-2"><strong>Wednesday Service:</strong> {st.wednesday}</p>}
                 </div>
               )
             })}

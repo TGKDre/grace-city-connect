@@ -1,5 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { supabase } from "../lib/supabase";
+import type { Database } from "../lib/database.types";
+
+type Event = Database["public"]["Tables"]["events"]["Row"];
 
 export const Route = createFileRoute("/events")({
   component: EventsPage,
@@ -26,7 +29,7 @@ function EventsPage() {
               className="rounded-xl border border-white/5 bg-white/[0.02] p-6 transition-all hover:border-grace/30 hover:bg-white/[0.04]"
             >
               <h2 className="font-display text-xl text-grace mb-2">
-                {event.name}
+                {event.title}
               </h2>
               <p className="text-sm text-ink-muted mb-4 leading-relaxed">
                 {event.description}
