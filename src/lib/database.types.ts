@@ -1,3 +1,11 @@
+export type ServiceTimes = {
+  sunday?: string;
+  wednesday?: string;
+  phone?: string;
+  email?: string;
+  ig?: string;
+};
+
 export type Campus = {
   id: string;
   created_at: string;
@@ -5,7 +13,7 @@ export type Campus = {
   slug: string;
   description: string;
   address: string;
-  service_times: Record<string, string>; // e.g. { "Sunday": "10:00 AM", "Wednesday": "7:00 PM" }
+  service_times: ServiceTimes;
   stream_url: string;
   instagram: string;
   pastor_name: string;
@@ -19,14 +27,19 @@ export type Fellowship = {
   id: string;
   created_at: string;
   name: string;
+  slug: string;
   school: string;
   zip_code: string;
   city: string;
   state: string;
   meeting_info: string;
+  meeting_day: string;
   meeting_time: string;
+  phone: string;
+  email: string;
   instagram: string;
   campus_id: string;
+  campus_slug: string;
   is_active: boolean;
 };
 
@@ -39,8 +52,9 @@ export type Event = {
   time: string;
   location: string;
   image_url: string;
-  campus_id: string | null; // null = system-wide event
-  link_url: string;
+  campus_id: string | null;
+  campus_slug: string;
+  link: string;
   is_active: boolean;
 };
 

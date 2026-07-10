@@ -31,3 +31,8 @@ dist-ssr
 *.sln
 *.sw?
 .env
+routeTree.gen.ts
+
+# Dev scripts
+scripts/*.cjs
+!scripts/setup-supabase.cjs
